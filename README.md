@@ -1,7 +1,6 @@
-# TaskMaster: Task Scheduler in Go  
-**TaskMaster Hero**
+# Distributed Task Execution System 
 
-TaskMaster is a robust and efficient task scheduler made for educational purposes and written in **Go**.  
+It is a robust and efficient task scheduler made for educational purposes and written in **Go**.  
 It is designed to handle a high volume of tasks and distribute them across multiple workers for execution.
 
 ---
@@ -61,11 +60,11 @@ This enables high **scalability** and **fault tolerance**.
 
 ---
 
-## 📂 Directory Structure  
+## 📂 Project Layout  
 
-cmd/ # Entry points for scheduler, coordinator, and worker
-pkg/ # Core logic of scheduling, coordination, and execution
-data/ # SQL scripts for database initialization
-tests/ # End-to-end integration tests
-*-dockerfile # Dockerfiles for each service
-docker-compose.yml # Deployment configs for containerized cluster
+- `cmd/` → Entry points for **scheduler**, **coordinator**, and **worker**  
+- `pkg/` → Core logic of **scheduling**, **coordination**, and **execution**  
+- `data/` → SQL scripts for **database initialization**  
+- `tests/` → End-to-end **integration tests**  
+- `*-dockerfile` & `docker-compose.yml` → Deployment configs for **containerized cluster setup**  
+
