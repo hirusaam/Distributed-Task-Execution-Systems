@@ -1,70 +1,65 @@
-# Distributed Task Execution System 
+# Distributed Task Execution System  
 
-It is a robust and efficient task scheduler made for educational purposes and written in **Go**.  
-It is designed to handle a high volume of tasks and distribute them across multiple workers for execution.
 
----
+## Project Overview  
 
-##  System Components  
+A **scalable task scheduler** built in **Go**, designed to handle high volumes of tasks and distribute them efficiently across multiple workers using **gRPC**.  
 
-TaskMaster is composed of several key components that work together to schedule and execute tasks:
-
-- **Scheduler**  
-  - Front-end server of the system.  
-  - Receives tasks from clients and schedules them for execution.  
-
-- **Coordinator**  
-  - Selects tasks that need to be executed at a given instant based on their schedules.  
-  - Handles worker registration and decommissioning.  
-  - Distributes tasks across available workers.  
-
-- **Worker**  
-  - Executes tasks assigned by the coordinator.  
-  - Reports completion status back to the coordinator.  
-  - Registers automatically with the coordinator and sends **heartbeats** to indicate liveness.  
-
-- **Client**  
-  - Submits tasks to the scheduler via an **HTTP endpoint**.  
-  - Queries the scheduler for task status.  
-
-- **Database (PostgreSQL)**  
-  - Stores task details: ID, task info, scheduling info, and completion info.  
-  - Accessed by both the **scheduler** and **coordinator**.  
-
-🔗 All components are implemented as separate services and communicate using **gRPC**.  
-This enables high **scalability** and **fault tolerance**.
+- Demonstrates **distributed scheduling, execution, and monitoring**  
+- Backed by **PostgreSQL** for persistence  
+- Includes **Docker-based deployment** for easy cluster setup  
 
 ---
 
-##  Life of a Task  
+## System Architecture  
 
-### 1. Scheduling  
-- User sends an HTTP request to the **scheduler**.  
-- Scheduler persists task info and scheduling details into the **database**.  
+The system consists of five key components:  
 
-### 2. Execution  
-- Coordinator periodically scans the DB for scheduled tasks.  
-- Coordinator distributes tasks to available workers.  
-- Workers enqueue tasks in memory and execute them as soon as resources are available.  
+| Component   | Role |
+|-------------|------|
+| **Scheduler** | Receives task requests from clients and stores them in the database |
+| **Coordinator** | Selects due tasks from DB and distributes to workers; handles worker registration & heartbeats |
+| **Worker** | Executes assigned tasks, queues them in memory, reports completion |
+| **Client** | Submits tasks & queries status via HTTP endpoints |
+| **Database (PostgreSQL)** | Stores task metadata & scheduling information |
 
-### 3. Retries  
-- Coordinator retries task execution only if task submission to a worker failed.  
-- Tasks that fail **inside a worker** are not retried.  
-
----
-
-##  Limitations  
-- This project is for **educational purposes** only.  
-- Tasks are simple **strings** representing arbitrary data.  
-- Coordinator uses a **push-based** approach → may overload workers if not enough are available.  
+📡 **Communication:** All services use **gRPC**, enabling scalability and fault tolerance.  
 
 ---
 
-##  Directory Layout  
+## Task Lifecycle  
 
-- `cmd/` → Entry points for **scheduler**, **coordinator**, and **worker**  
-- `pkg/` → Core logic of **scheduling**, **coordination**, and **execution**  
-- `data/` → SQL scripts for **database initialization**  
-- `tests/` → End-to-end **integration tests**  
-- `*-dockerfile` & `docker-compose.yml` → Deployment configs for **containerized cluster setup**  
+1. **Scheduling**  
+   - Clients send tasks to **Scheduler** via `HTTP POST`  
+   - Scheduler saves task details & scheduled execution time in DB  
 
+2. **Execution**  
+   - **Coordinator** polls DB for due tasks  
+   - Distributes tasks to **Workers**  
+   - Workers execute & report status back  
+
+3. **Retries**  
+   - Coordinator retries tasks only if **worker assignment fails**  
+   - Execution failures are **not auto-retried** 
+
+---
+
+## Directory Structure  
+
+| Directory / File       | Description |
+|-------------------------|-------------|
+| `cmd/` | Entry points for scheduler, coordinator, and worker |
+| `pkg/` | Core service logic |
+| `data/` | SQL scripts for DB initialization |
+| `tests/` | Integration tests |
+| `*-dockerfile` | Dockerfiles for each service |
+| `docker-compose.yml` | Compose file for cluster setup |
+
+---
+
+## Running the Cluster  
+
+Run with **Docker Compose**:  
+
+```bash
+docker-compose up --build --scale worker=3
