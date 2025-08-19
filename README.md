@@ -5,7 +5,7 @@ It is designed to handle a high volume of tasks and distribute them across multi
 
 ---
 
-## 🚀 System Components  
+##  System Components  
 
 TaskMaster is composed of several key components that work together to schedule and execute tasks:
 
@@ -36,7 +36,7 @@ This enables high **scalability** and **fault tolerance**.
 
 ---
 
-## 🔄 Life of a Task  
+##  Life of a Task  
 
 ### 1. Scheduling  
 - User sends an HTTP request to the **scheduler**.  
@@ -53,14 +53,14 @@ This enables high **scalability** and **fault tolerance**.
 
 ---
 
-## ⚠️ Limitations  
+##  Limitations  
 - This project is for **educational purposes** only.  
 - Tasks are simple **strings** representing arbitrary data.  
 - Coordinator uses a **push-based** approach → may overload workers if not enough are available.  
 
 ---
 
-## 📂 Project Layout  
+##  Directory Layout  
 
 - `cmd/` → Entry points for **scheduler**, **coordinator**, and **worker**  
 - `pkg/` → Core logic of **scheduling**, **coordination**, and **execution**  
